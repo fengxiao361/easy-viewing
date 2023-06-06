@@ -4,6 +4,9 @@ export default defineConfig({
   routes: [
     { path: "/", component: "home" },
   ],
+  outputPath: 'esy',
+
+  publicPath: '/easy-viewing/esy/',
   title: 'EasyViewing',
   mfsu: {},
   hash: true,
