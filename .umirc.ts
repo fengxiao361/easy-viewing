@@ -5,7 +5,7 @@ export default defineConfig({
     { path: "/", component: "home" },
   ],
   outputPath: 'esy',
-
+  base: '/easy-viewing/esy/',
   publicPath: '/easy-viewing/esy/',
   title: 'EasyViewing',
   mfsu: {},
