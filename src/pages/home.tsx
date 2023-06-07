@@ -5,6 +5,7 @@ import styles from './home.less';
 let timID: any;
 const HomePage = () => {
   const [url, setUrl] = useState<string>('');
+  const [source, setSource] = useState<string>('https://jx.aidouer.net/?url=');
   const [progressVal, setProgressVal] = useState<number>(0);
   const [tipsType, setTipsType] = useState<boolean>(true);
   const prRef = useRef<number>(0);
@@ -16,14 +17,10 @@ const HomePage = () => {
       timID && clearInterval(timID);
     };
   }, []);
-  const browserName = navigator.userAgent.toLowerCase();
-  console.log('Browser Name and Version:', browserName);
   //解析
   const hanldeParsing = () => {
     const duration = 300; // 动画持续时间，单位为毫秒
     const startTime = performance.now(); //动画开始时间
-    const browserName = navigator.userAgent;
-    console.log('Browser Name and Version:', browserName);
     const modal: any = document.getElementById('dialog-default');
     if (url.indexOf('http') == -1 && url.indexOf('https') == -1) {
       errType();
@@ -41,7 +38,7 @@ const HomePage = () => {
       } else {
         modal.close();
         const link = document.createElement('a');
-        link.href = 'https://jx.jsonplayer.com/player/?url=' + url;
+        link.href = source + url;
         link.target = '_blank';
         document.body.appendChild(link);
         link.click();
@@ -79,6 +76,11 @@ const HomePage = () => {
     }, 1800);
   };
 
+  //解析地址设置
+  const handleSelectChange = (e: any) => {
+    setSource(e.target.value);
+  };
+
   return (
     <div className={styles.wrap}>
       <Card title="影视解析">
@@ -89,15 +91,49 @@ const HomePage = () => {
           <p>此工具仅限个人使用，请勿用于盈利！</p>
         </div>
         <div className="nes-field" style={{ marginTop: 25 }}>
-          <label>填入复制的 url</label>
-          <input
-            type="text"
-            className="nes-input"
-            placeholder="请粘贴URL"
-            value={url}
-            onChange={handleUrlChange}
-            onPaste={handlePaste}
-          />
+          <label>选择解析源地址</label>
+          <div className="nes-select">
+            <select
+              defaultValue={source}
+              onChange={handleSelectChange}
+              required
+              id="default_select"
+            >
+              <option value={'https://jx.aidouer.net/?url='}>
+                aidouer解析
+              </option>
+              <option value={'https://jx.jsonplayer.com/player/?url='}>
+                jsonplayer解析
+              </option>
+              <option value={'https://jx.bozrc.com:4433/player/?url='}>
+                bozrc解析
+              </option>
+              <option value={'https://jx.playerjy.com/?ads=0&url='}>
+                playerjy解析
+              </option>
+              <option value="https://www.wannengjiexi.com/jiexi1/?url=">
+                wannengjiexi解析
+              </option>
+              <option value="https://parse.mw0.cc/?url=">mw0解析</option>
+              <option value="https://www.ckmov.com/?url=">ckmov解析</option>
+              <option value="https://jx.iztyy.com/svip/?url=">iztyy解析</option>
+              <option value="https://jx.ppflv.com/?url=">ppflv解析</option>
+              <option value="https://yun.nxflv.com/?url=">yunnxflv解析</option>
+              <option value="https://jx.qqwtt.com/?url=">qqwtt解析</option>
+              <option value="https://dm.xmflv.com:4433/?url=">xmflv解析</option>
+            </select>
+          </div>
+          <section style={{ marginTop: 25 }}>
+            <label>填入复制的 url</label>
+            <input
+              type="text"
+              className="nes-input"
+              placeholder="请粘贴URL"
+              value={url}
+              onChange={handleUrlChange}
+              onPaste={handlePaste}
+            />
+          </section>
           <div className={styles.bth_box}>
             <button
               onClick={hanldeParsing}
@@ -113,12 +149,12 @@ const HomePage = () => {
           <li>使用教程.</li>
           <li>1.复制需要观看的视频url地址</li>
           <li>2.填入上方input中点击解析即可</li>
+          <li>3.如解析失败可更换不同解析源进行解析</li>
           <li>
             <span className="nes-text is-error">
               tips:B站等弹幕网站可能存在无法正确解析情况
             </span>
           </li>
-          <li>此工具基于JSONPlayer搭建</li>
         </ul>
       </Card>
 
