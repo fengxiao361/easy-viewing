@@ -1,11 +1,13 @@
 import { defineConfig } from "umi";
 
+const { NODE_ENV } = process.env;
+const isEnv = NODE_ENV == 'development' ? false : true
 export default defineConfig({
   routes: [
-    { path: "/", component: "home" },
+    { path: '/', redirect: '/home' },
+    { path: "/home", component: "home" },
   ],
-  outputPath: 'esy',
-  publicPath: '/easy-viewing/esy/',
+  publicPath: isEnv ? './' : '/',
   title: 'EasyViewing',
   mfsu: {},
   hash: true,

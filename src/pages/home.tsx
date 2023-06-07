@@ -16,32 +16,47 @@ const HomePage = () => {
       timID && clearInterval(timID);
     };
   }, []);
-
+  const browserName = navigator.userAgent.toLowerCase();
+  console.log('Browser Name and Version:', browserName);
   //解析
   const hanldeParsing = () => {
+    const duration = 300; // 动画持续时间，单位为毫秒
+    const startTime = performance.now(); //动画开始时间
+    const browserName = navigator.userAgent;
+    console.log('Browser Name and Version:', browserName);
     const modal: any = document.getElementById('dialog-default');
     if (url.indexOf('http') == -1 && url.indexOf('https') == -1) {
       errType();
       return;
     }
     modal.showModal();
-
-    timID = setInterval(() => {
-      setProgressVal(prRef.current + 0.25);
-      if (prRef.current >= 11) {
-        clearInterval(timID);
+    const setVal = (currentTime: any) => {
+      const elapsedTime = currentTime - startTime; // 计算已经过去的时间
+      // 根据已经过去的时间计算动画进度
+      const progress = Math.min(elapsedTime / duration, 10);
+      setProgressVal(progress);
+      if (progress < 10) {
+        // 如果动画未完成，则继续执行下一帧
+        requestAnimationFrame(setVal);
+      } else {
         modal.close();
-        window.open('https://jx.jsonplayer.com/player/?url=' + url);
+        const link = document.createElement('a');
+        link.href = 'https://jx.jsonplayer.com/player/?url=' + url;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setProgressVal(0);
       }
-    }, 50);
+    };
+
+    requestAnimationFrame(setVal);
   };
 
   //粘贴
   const handlePaste = (event: any) => {
     const clipboardData = event.clipboardData || window.clipboardData;
-    console.log(clipboardData);
     const text = clipboardData.getData('text');
-    console.log('粘贴的文本内容:', text);
     if (text.indexOf('http') == -1 && text.indexOf('https') == -1) {
       errType();
       return;
@@ -97,13 +112,12 @@ const HomePage = () => {
         <ul className={`nes-list ${styles.tips_box}`}>
           <li>使用教程.</li>
           <li>1.复制需要观看的视频url地址</li>
-          <li>2.填入上方input中点击解析即可进行安心食用</li>
+          <li>2.填入上方input中点击解析即可</li>
           <li>
             <span className="nes-text is-error">
               tips:B站等弹幕网站可能存在无法正确解析情况
             </span>
           </li>
-          <li>联系我：fengxiao361@qq.com</li>
           <li>此工具基于JSONPlayer搭建</li>
         </ul>
       </Card>

@@ -8,6 +8,7 @@
 /.umi
 /.umi-production
 /.umi-test
+/dist
 /.mfsu
 /pnpm-lock.yaml
 .DS_Store

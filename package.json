@@ -2,8 +2,8 @@
   "private": true,
   "author": "SuMing_ <fengxiao361@qq.com>",
   "scripts": {
-    "dev": "umi dev",
     "build": "umi build",
+    "dev": "umi dev",
     "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev"
