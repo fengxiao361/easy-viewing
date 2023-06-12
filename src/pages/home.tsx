@@ -18,16 +18,16 @@ const HomePage = () => {
     };
   }, []);
   //解析
-  const hanldeParsing = () => {
+  const handleParsing = () => {
     const duration = 300; // 动画持续时间，单位为毫秒
     const startTime = performance.now(); //动画开始时间
     const modal: any = document.getElementById('dialog-default');
-    if (url.indexOf('http') == -1 && url.indexOf('https') == -1) {
+    if (!url.startsWith('http')) {
       errType();
       return;
     }
     modal.showModal();
-    const setVal = (currentTime: any) => {
+    const setVal = (currentTime: number) => {
       const elapsedTime = currentTime - startTime; // 计算已经过去的时间
       // 根据已经过去的时间计算动画进度
       const progress = Math.min(elapsedTime / duration, 10);
@@ -37,12 +37,7 @@ const HomePage = () => {
         requestAnimationFrame(setVal);
       } else {
         modal.close();
-        const link = document.createElement('a');
-        link.href = source + url;
-        link.target = '_blank';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        window.open(source + url, '_blank'); // 使用window.open代替创建和删除a标签
         setProgressVal(0);
       }
     };
@@ -52,16 +47,18 @@ const HomePage = () => {
 
   //粘贴
   const handlePaste = (event: any) => {
+    //@ts-ignore
     const clipboardData = event.clipboardData || window.clipboardData;
     const text = clipboardData.getData('text');
-    if (text.indexOf('http') == -1 && text.indexOf('https') == -1) {
+    if (!text.startsWith('http')) {
       errType();
       return;
     }
     setUrl(text);
   };
 
-  const handleUrlChange = (e: any) => {
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // 使用React.ChangeEvent和HTMLInputElement类型代替any
     const value = e.target.value;
     setUrl(value);
   };
@@ -79,6 +76,10 @@ const HomePage = () => {
   //解析地址设置
   const handleSelectChange = (e: any) => {
     setSource(e.target.value);
+  };
+
+  const handleJumpToUrl = (toUrl: string) => {
+    window.open(toUrl, '_blank'); // 使用window.open代替创建和删除a标签
   };
 
   return (
@@ -114,13 +115,9 @@ const HomePage = () => {
               <option value="https://www.wannengjiexi.com/jiexi1/?url=">
                 wannengjiexi解析
               </option>
-              <option value="https://parse.mw0.cc/?url=">mw0解析</option>
               <option value="https://www.ckmov.com/?url=">ckmov解析</option>
-              <option value="https://jx.iztyy.com/svip/?url=">iztyy解析</option>
               <option value="https://jx.ppflv.com/?url=">ppflv解析</option>
               <option value="https://yun.nxflv.com/?url=">yunnxflv解析</option>
-              <option value="https://jx.qqwtt.com/?url=">qqwtt解析</option>
-              <option value="https://dm.xmflv.com:4433/?url=">xmflv解析</option>
             </select>
           </div>
           <section style={{ marginTop: 25 }}>
@@ -136,14 +133,52 @@ const HomePage = () => {
           </section>
           <div className={styles.bth_box}>
             <button
-              onClick={hanldeParsing}
+              onClick={setUrl.bind(this, '')}
+              type="button"
+              className="nes-btn"
+              style={{ width: 120 }}
+            >
+              清空
+            </button>
+            <button
+              onClick={handleParsing}
               type="button"
               className="nes-btn is-primary"
-              style={{ width: 200 }}
+              style={{ width: 120, marginLeft: 15 }}
             >
               解析
             </button>
           </div>
+
+          <section className={styles.jump}>
+            <span
+              className="nes-text is-primary"
+              onClick={handleJumpToUrl.bind(this, 'https://v.qq.com/')}
+            >
+              腾讯视频
+            </span>
+            <span
+              className="nes-text is-primary"
+              onClick={handleJumpToUrl.bind(this, 'https://www.iqiyi.com/')}
+            >
+              爱奇艺
+            </span>
+            <span
+              className="nes-text is-primary"
+              onClick={handleJumpToUrl.bind(
+                this,
+                'https://www.mgtv.com/index.html',
+              )}
+            >
+              芒果TV
+            </span>
+            <span
+              className="nes-text is-primary"
+              onClick={handleJumpToUrl.bind(this, 'https://www.bilibili.com/')}
+            >
+              BiliBili
+            </span>
+          </section>
         </div>
         <ul className={`nes-list ${styles.tips_box}`}>
           <li>使用教程.</li>
