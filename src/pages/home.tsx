@@ -100,6 +100,9 @@ const HomePage = () => {
               required
               id="default_select"
             >
+               <option value={https://jx.m3u8.tv/jiexi/?url='}>
+                无广告【全网解析】
+              </option>
               <option value={'https://jx.aidouer.net/?url='}>
                 aidouer解析
               </option>
